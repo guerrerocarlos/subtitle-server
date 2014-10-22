@@ -1,0 +1,26 @@
+{
+  "name": "subtitles-server",
+  "version": "0.0.1",
+  "description": "Simple Subtitles Server",
+  "main": "index.js",
+  "scripts": {
+    "test": "node test/test.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:guerrerocarlos/subtitle-server.git"
+  },
+  "keywords": [
+    "subtitles",
+    "vtt"
+  ],
+  "author": "Carlos Guerrero <guerrerocarlos@gmail.com>",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/guerrerocarlos/subtitle-server/issues"
+  },
+  "homepage": "https://github.com/guerrerocarlos/subtitle-server",
+  "dependencies": {
+    "iconv-lite": "^0.4.4"
+  }
+}
