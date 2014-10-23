@@ -1,56 +1,54 @@
-var server;
-var httpServer;
-var PORT = 9999;
-var subData = '';
 var http = require('http');
 var iconv = require('iconv-lite');
 var fs = require('fs')
 
-server = http.createServer(function (req, res) {
-    if (req.headers.origin) {
-        res.setHeader('Access-Control-Allow-Origin', req.headers.origin);
-    }
+function SubtitlesServer() {
+    var self = this
 
-    res.writeHead(200, {
-        'Content-Type': 'text/vtt'
+    self.server = http.createServer(function (req, res) {
+        if (req.headers.origin) {
+            res.setHeader('Access-Control-Allow-Origin', req.headers.origin);
+        }
+
+        res.writeHead(200, {
+            'Content-Type': 'text/vtt'
+        });
+        res.end(self.subData);
     });
-    res.end(subData);
-});
 
-function startListening(cb) {
-    httpServer = server.listen(PORT);
+};
+
+SubtitlesServer.prototype.sL = function(cb) {
+    console.log("FUNCTION START LISTENING FROM SUBTITLES")
+    this.httpServer = this.server.listen(8888);
 }
 
-function stopServer(cb) {
-    httpServer.close(function () {
+SubtitlesServer.prototype.stopServer = function(cb) {
+    var self = this
+    self.httpServer.close(function () {
         if (cb) {
             cb();
         }
     });
 }
 
-var SubtitlesServer = {
-    start: function (data, cb) {
+SubtitlesServer.prototype.start = function (data, cb) {
+        var self = this
         iconv.extendNodeEncodings();
-        var vtt = data.vtt;
-        var encoding = data.encoding;
+        self.vtt = data.vtt;
+        self.encoding = data.encoding;
         try {
-            fs.readFile(vtt, {}, function (err, data) {
-                subData = data;
-                if (httpServer) {
-                    stopServer(startListening(cb));
+            fs.readFile(self.vtt, {}, function (err, data) {
+                self.subData = data;
+                if (self.httpServer) {
+                    self.stopServer(self.sL(cb));
                 } else {
-                    startListening(cb);
+                    self.sL(cb);
                 }
             });
         } catch (e) {
             console.log('Error Reading vtt');
         }
-    },
-
-    stop: function () {
-        stopServer();
     }
-};
 
 module.exports = SubtitlesServer
